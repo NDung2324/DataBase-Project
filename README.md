@@ -1,409 +1,326 @@
-# On-Demand Streaming Platform (Mini-Netflix)
+# Database Project Report
 
-## 1. Project Overview
-
-**On-Demand Streaming Platform (Mini-Netflix)** is a database project that models a simplified online streaming platform.
-
-The system is designed to manage:
-
-* User accounts
-* User profiles
-* Subscription plans
-* User subscriptions
-* Movies
-* TV series and episodes
-* Watch history
-
-The project focuses on applying **EER (Enhanced Entity-Relationship) modeling** to represent different types of streaming content and relationships between users, profiles, subscriptions, and content.
+**Project ID & Title:** On-Demand Streaming Platform (Mini-Netflix)
 
 ---
 
-## 2. Project Objectives
+## A. Project Identity
 
-The main objectives of this project are:
+**Team Name:** Group 3 – CHANG LINH NGU LAM
 
-1. Design an EER diagram for an on-demand streaming platform.
-2. Manage users and their profiles.
-3. Manage subscription plans and user subscriptions.
-4. Store movies and TV series episodes.
-5. Track users' watch history.
-6. Apply specialization/generalization to the `CONTENT` entity.
-7. Convert the EER model into a relational database schema.
-8. Apply database normalization principles.
+**Team Members:**
 
----
+1. **Lê Ngọc Dũng** — n24dece065@student.ptithcm.edu.vn
+2. **Lê Phạm Khánh Huy** — n24dece072@student.ptithcm.edu.vn
+3. **Phan Giảng Bình** — n24dece056@student.ptithcm.edu.vn
 
-## 3. System Scope
-
-The system contains the following main functions:
-
-### User Management
-
-The system stores user account information, including:
-
-* User ID
-* Username
-* Password
-* Email
-* Role
-
-Each user can create multiple profiles.
+**Project Title:** On-Demand Streaming Platform (Mini-Netflix)
 
 ---
 
-### Profile Management
+## B. Report Structure
 
-A profile represents an individual viewing profile created by a user.
+### 1. Introduction & Project Scope
 
-Each profile contains:
+*(Adapted from ISO/IEC/IEEE 29148)*
 
-* Profile ID
-* User ID
-* Profile name
-* Birthdate
+An on-demand streaming platform needs to manage a large amount of information every day, including user accounts, user profiles, subscription plans, subscriptions, movies, TV series episodes, and watch histories. If this information is not organized properly, it may lead to duplicated data, inconsistent records, or difficulties in tracking users' viewing activities.
 
-A user can create multiple profiles, while each profile belongs to exactly one user.
+The **On-Demand Streaming Platform (Mini-Netflix)** is designed as a centralized database system for managing the basic operations of a streaming service. The system focuses on managing users, profiles, subscriptions, subscription plans, content, movies, TV series, episodes, and watch history.
 
-**Relationship:**
+The database also uses an **EER specialization** for the `CONTENT` entity. Content is divided into two subtypes: `MOVIES` and `EPISODE`. This allows common content information to be stored in the `CONTENT` entity while specific information is stored in the corresponding subtype.
+
+---
+
+### 1.1 System Objective
+
+The main objective of the system is to provide a structured database for storing and managing essential information of an on-demand streaming platform.
+
+The system is designed to:
+
+* Store and manage user account information.
+* Store and manage user profiles.
+* Allow users to create multiple profiles.
+* Manage subscription information.
+* Manage different subscription plans.
+* Store plan price, quality, and maximum number of profiles.
+* Store and manage streaming content.
+* Classify content into Movies and Episodes.
+* Store TV series information.
+* Associate episodes with their corresponding TV series.
+* Maintain users' watch history.
+* Store watch duration and completion status.
+* Maintain relationships between profiles and watched content.
+* Maintain data consistency through primary keys and foreign keys.
+
+---
+
+### 1.2 Business Rules & Constraints
+
+#### 1.2.1 User and Profile
+
+* **BR1:** Each User must have a unique `USER_ID`.
+* **BR2:** A User may create many Profiles.
+* **BR3:** Each Profile must belong to exactly one User.
+* **BR4:** Each Profile must have a unique `PROFILE_ID`.
+* **BR5:** A Profile contains a profile name and birthdate.
+
+#### 1.2.2 Subscription and Subscription Plan
+
+* **BR6:** Each Subscription must have a unique `SUBSCRIPTION_ID`.
+* **BR7:** A User may have many Subscription records.
+* **BR8:** Each Subscription must belong to exactly one User.
+* **BR9:** Each Subscription must use exactly one Subscription Plan.
+* **BR10:** One Subscription Plan may be used by many Subscriptions.
+* **BR11:** Each Subscription Plan must have a unique `PLAN_ID`.
+* **BR12:** A Subscription Plan stores the plan name, price, quality, and maximum number of profiles.
+* **BR13:** Each Subscription must contain a status, start date, and end date.
+
+#### 1.2.3 Content
+
+* **BR14:** Each Content item must have a unique `CONTENT_ID`.
+* **BR15:** Each Content item stores a title, description, release date, duration, and content type.
+* **BR16:** Content is specialized into Movies and Episodes.
+* **BR17:** Each Movie references one existing Content item.
+* **BR18:** Each Episode references one existing Content item.
+
+#### 1.2.4 TV Series and Episode
+
+* **BR19:** Each TV Series must have a unique `SERIES_ID`.
+* **BR20:** Each TV Series must have a series name.
+* **BR21:** An Episode must belong to exactly one TV Series.
+* **BR22:** One TV Series may contain many Episodes.
+* **BR23:** Each Episode must have an episode number and season number.
+* **BR24:** `EPISODE.SERIES_ID` must reference an existing `TV_SERIES.SERIES_ID`.
+
+#### 1.2.5 Watch History
+
+* **BR25:** Each Watch History record must have a unique `WATCH_HISTORY_ID`.
+* **BR26:** A Profile may have many Watch History records.
+* **BR27:** Each Watch History record must belong to exactly one Profile.
+* **BR28:** One Content item may appear in many Watch History records.
+* **BR29:** Each Watch History record must reference exactly one Content item.
+* **BR30:** Watch History stores the watch duration and whether the content was completed.
+* **BR31:** `WATCH_HISTORY.PROFILE_ID` must reference an existing Profile.
+* **BR32:** `WATCH_HISTORY.CONTENT_ID` must reference an existing Content item.
+
+---
+
+### 1.2.6 Main Constraints
+
+The database design applies the following major constraints:
+
+* `USER_ID` must be unique.
+* `PROFILE_ID` must be unique.
+* `SUBSCRIPTION_ID` must be unique.
+* `PLAN_ID` must be unique.
+* `WATCH_HISTORY_ID` must be unique.
+* `CONTENT_ID` must be unique.
+* `SERIES_ID` must be unique.
+* `PROFILE.USER_ID` must reference an existing User.
+* `SUBSCRIPTION.USER_ID` must reference an existing User.
+* `SUBSCRIPTION.PLAN_ID` must reference an existing Subscription Plan.
+* `WATCH_HISTORY.PROFILE_ID` must reference an existing Profile.
+* `WATCH_HISTORY.CONTENT_ID` must reference an existing Content.
+* `MOVIES.CONTENT_ID` must reference an existing Content.
+* `EPISODE.CONTENT_ID` must reference an existing Content.
+* `EPISODE.SERIES_ID` must reference an existing TV Series.
+* An Episode cannot belong to a non-existing TV Series.
+* A Subscription cannot use a non-existing Subscription Plan.
+
+These constraints help maintain **referential integrity and data consistency** throughout the database.
+
+---
+
+## 2. Database Design
+
+*(ISO/IEC 19505 / IE Standards)*
+
+### 2.1 Conceptual Model (ER/EER Diagram)
+
+The conceptual database model is represented using an **Enhanced Entity-Relationship (EER) diagram**.
+
+The main entities in the system are:
+
+* `USERS`
+* `PROFILE`
+* `SUBSCRIPTION`
+* `SUBSCRIPTION_PLAN`
+* `WATCH_HISTORY`
+* `CONTENT`
+* `MOVIES`
+* `EPISODE`
+* `TV_SERIES`
+
+The EER model contains several important relationships:
 
 ```text
 USERS 1 ───── creates ───── N PROFILE
-```
 
----
-
-### Subscription Management
-
-The system allows users to subscribe to a subscription plan.
-
-A subscription contains:
-
-* Subscription ID
-* User ID
-* Plan ID
-* Status
-* Start date
-* End date
-
-A subscription uses one subscription plan.
-
-**Relationship:**
-
-```text
 USERS 1 ───── subscribes to ───── N SUBSCRIPTION
-                                      |
-                                      N
-                                      |
-                                    uses
-                                      |
-                                      1
-                                      |
-                              SUBSCRIPTION_PLAN
-```
 
----
+SUBSCRIPTION N ───── uses ───── 1 SUBSCRIPTION_PLAN
 
-### Subscription Plans
-
-The system provides different subscription plans.
-
-Each plan contains:
-
-* Plan ID
-* Plan name
-* Price
-* Quality
-* Maximum number of profiles
-
-Example plans could include:
-
-```text
-Basic
-Standard
-Premium
-```
-
-The actual plans can be changed according to the project's requirements.
-
----
-
-## 4. Content Management
-
-`CONTENT` is the main entity used to represent streaming content.
-
-Each content item contains:
-
-* Content ID
-* Title
-* Description
-* Release date
-* Duration
-* Content type
-
-The EER model specializes `CONTENT` into two subtypes:
-
-```text
-                 CONTENT
-                    |
-                 is a
-                /     \
-               /       \
-          MOVIES      EPISODE
-```
-
----
-
-## 5. Movie
-
-`MOVIES` represents movie content.
-
-It uses:
-
-* Content ID
-
-`CONTENT_ID` is both the primary key of `MOVIES` and a reference to the corresponding `CONTENT`.
-
-Example:
-
-```text
-CONTENT
-   |
-   └── MOVIES
-```
-
-A movie inherits the common content information from `CONTENT`.
-
----
-
-## 6. TV Series and Episodes
-
-The system also supports TV series.
-
-### TV_SERIES
-
-`TV_SERIES` represents a television series.
-
-Attributes:
-
-* Series ID
-* Series name
-
-### EPISODE
-
-`EPISODE` represents an individual episode of a TV series.
-
-Attributes:
-
-* Content ID
-* Series ID
-* Episode number
-* Season number
-
-Each episode belongs to exactly one TV series.
-
-One TV series can contain many episodes.
-
-**Relationship:**
-
-```text
-TV_SERIES 1 ───── belongs to ───── N EPISODE
-```
-
----
-
-## 7. Watch History
-
-The `WATCH_HISTORY` entity records the content watched by profiles.
-
-It contains:
-
-* Watch History ID
-* Profile ID
-* Content ID
-* Watch duration
-* Completed status
-
-The relationships are:
-
-```text
 PROFILE 1 ───── watches ───── N WATCH_HISTORY
 
 WATCH_HISTORY N ───── on ───── 1 CONTENT
+
+CONTENT 1 ───── is a ───── MOVIES
+                    \
+                     └──── EPISODE
+
+EPISODE N ───── belongs to ───── 1 TV_SERIES
 ```
 
-This means:
+#### EER Specialization
 
-* One profile can have many watch history records.
-* Each watch history record belongs to one profile.
-* One content item can appear in many watch history records.
-* Each watch history record refers to one content item.
+The `CONTENT` entity is the superclass of two specialized entities:
 
-This allows the system to track what content a profile has watched and whether the content was completed.
+```text
+                    CONTENT
+                       |
+                      is a
+                    /     \
+                   /       \
+              MOVIES      EPISODE
+                            |
+                         belongs to
+                            |
+                        TV_SERIES
+```
+
+`CONTENT` stores attributes common to streaming content:
+
+* `CONTENT_ID`
+* `TITLE`
+* `DESCRIPTION`
+* `RELEASE_DATE`
+* `DURATION`
+* `CONTENT_TYPE`
+
+`MOVIES` represents movie content and uses `CONTENT_ID`.
+
+`EPISODE` represents TV series episodes and contains:
+
+* `CONTENT_ID`
+* `SERIES_ID`
+* `EPISODE_NUMBER`
+* `SEASON_NUMBER`
 
 ---
 
-## 8. Main Entities
+### Entity Overview
 
-| Entity                | Description                                       |
-| --------------------- | ------------------------------------------------- |
-| **USERS**             | Stores user account information                   |
-| **PROFILE**           | Stores viewing profiles created by users          |
-| **SUBSCRIPTION**      | Stores user subscription information              |
-| **SUBSCRIPTION_PLAN** | Stores available subscription plans               |
-| **WATCH_HISTORY**     | Records content watched by profiles               |
-| **CONTENT**           | Stores common information about streaming content |
-| **MOVIES**            | Represents movie content                          |
-| **EPISODE**           | Represents individual TV series episodes          |
-| **TV_SERIES**         | Stores TV series information                      |
-
----
-
-## 9. Entity Relationships
-
-The main relationships in the EER diagram are:
-
-| Relationship                     | Cardinality        | Description                                      |
-| -------------------------------- | ------------------ | ------------------------------------------------ |
-| USERS → PROFILE                  | 1:N                | One user can create multiple profiles            |
-| USERS → SUBSCRIPTION             | 1:N                | One user can have multiple subscription records  |
-| SUBSCRIPTION → SUBSCRIPTION_PLAN | N:1                | Many subscriptions can use the same plan         |
-| PROFILE → WATCH_HISTORY          | 1:N                | One profile can have many watch history records  |
-| WATCH_HISTORY → CONTENT          | N:1                | Many watch records can refer to the same content |
-| CONTENT → MOVIES/EPISODE         | 1:1 specialization | Content is specialized into movie or episode     |
-| TV_SERIES → EPISODE              | 1:N                | One TV series can contain many episodes          |
+| **Entity**            | **Primary Key (PK)** | **Purpose**                                        |
+| --------------------- | -------------------- | -------------------------------------------------- |
+| **USERS**             | `USER_ID`            | Stores user account information.                   |
+| **PROFILE**           | `PROFILE_ID`         | Stores profiles created by users.                  |
+| **SUBSCRIPTION**      | `SUBSCRIPTION_ID`    | Stores user subscription information.              |
+| **SUBSCRIPTION_PLAN** | `PLAN_ID`            | Stores available subscription plans.               |
+| **WATCH_HISTORY**     | `WATCH_HISTORY_ID`   | Stores records of content watched by profiles.     |
+| **CONTENT**           | `CONTENT_ID`         | Stores common information about streaming content. |
+| **MOVIES**            | `CONTENT_ID` (FK)    | Represents movie content as a subtype of Content.  |
+| **EPISODE**           | `CONTENT_ID` (FK)    | Represents an episode as a subtype of Content.     |
+| **TV_SERIES**         | `SERIES_ID`          | Stores TV series information.                      |
 
 ---
 
-## 10. EER Specialization
+### Entity Attributes
 
-One of the main database challenges is modeling different types of content.
+#### USERS
 
-The `CONTENT` entity acts as a **superclass**.
+| Attribute  | Data Type   | Description                  |
+| ---------- | ----------- | ---------------------------- |
+| `USER_ID`  | varchar(20) | Unique identifier of a user. |
+| `USERNAME` | varchar(20) | User's username.             |
+| `PASSWORD` | varchar(20) | User's password.             |
+| `EMAIL`    | varchar(25) | User's email address.        |
 
-Its subtypes are:
+#### PROFILE
 
-* `MOVIES`
-* `EPISODE`
+| Attribute      | Data Type   | Description                          |
+| -------------- | ----------- | ------------------------------------ |
+| `PROFILE_ID`   | varchar(20) | Unique identifier of a profile.      |
+| `USER_ID`      | varchar(20) | References the owner of the profile. |
+| `PROFILE_NAME` | varchar(20) | Name of the profile.                 |
+| `BIRTHDATE`    | date        | Profile's birthdate.                 |
 
-```text
-                       CONTENT
-                          |
-                    Specialization
-                     /           \
-                    /             \
-                MOVIES          EPISODE
-                                  |
-                                  |
-                              belongs to
-                                  |
-                                  N
-                                  |
-                              TV_SERIES
-```
+#### SUBSCRIPTION
 
-Common attributes such as title, description, release date, and duration are stored in `CONTENT`.
+| Attribute         | Data Type   | Description                       |
+| ----------------- | ----------- | --------------------------------- |
+| `SUBSCRIPTION_ID` | varchar(20) | Unique subscription identifier.   |
+| `USER_ID`         | varchar(20) | References the subscribed user.   |
+| `PLAN_ID`         | varchar(20) | References the subscription plan. |
+| `STATUS`          | varchar(10) | Current subscription status.      |
+| `START_DATE`      | date        | Subscription start date.          |
+| `END_DATE`        | date        | Subscription end date.            |
 
-Specific information is stored in the corresponding subtype.
+#### SUBSCRIPTION_PLAN
 
----
+| Attribute      | Data Type   | Description                             |
+| -------------- | ----------- | --------------------------------------- |
+| `PLAN_ID`      | varchar(20) | Unique identifier of a plan.            |
+| `PLAN_NAME`    | varchar(20) | Name of the subscription plan.          |
+| `PRICE`        | int         | Price of the plan.                      |
+| `QUALITY`      | varchar(15) | Streaming quality provided by the plan. |
+| `MAX_PROFILES` | int         | Maximum number of profiles allowed.     |
 
-## 11. Business Rules
+#### CONTENT
 
-The following business rules are derived from the EER diagram:
+| Attribute      | Data Type   | Description                                |
+| -------------- | ----------- | ------------------------------------------ |
+| `CONTENT_ID`   | varchar(20) | Unique identifier of content.              |
+| `TITLE`        | varchar(20) | Title of the content.                      |
+| `DESCRIPTION`  | text        | Description of the content.                |
+| `RELEASE_DATE` | date        | Content release date.                      |
+| `DURATION`     | int         | Duration of the content.                   |
+| `CONTENT_TYPE` | varchar(10) | Type of content, such as Movie or Episode. |
 
-1. Each user must have a unique `USER_ID`.
-2. A user can create multiple profiles.
-3. Each profile belongs to one user.
-4. A user can have multiple subscription records.
-5. Each subscription belongs to one user.
-6. Each subscription uses one subscription plan.
-7. A subscription plan can be used by multiple subscriptions.
-8. Each profile can have multiple watch history records.
-9. Each watch history record belongs to one profile.
-10. Each watch history record refers to one content item.
-11. One content item can appear in multiple watch history records.
-12. Content can be classified as a movie or an episode.
-13. Each episode belongs to one TV series.
-14. One TV series can contain multiple episodes.
-15. `CONTENT_ID`, `USER_ID`, `PROFILE_ID`, `SUBSCRIPTION_ID`, `PLAN_ID`, `WATCH_HISTORY_ID`, and `SERIES_ID` uniquely identify their respective records.
+#### MOVIES
 
----
+| Attribute    | Data Type   | Description                                      |
+| ------------ | ----------- | ------------------------------------------------ |
+| `CONTENT_ID` | varchar(20) | Primary key and foreign key referencing Content. |
 
-## 12. Database Constraints
+#### TV_SERIES
 
-### Primary Key Constraints
+| Attribute     | Data Type   | Description                       |
+| ------------- | ----------- | --------------------------------- |
+| `SERIES_ID`   | varchar(20) | Unique identifier of a TV series. |
+| `SERIES_NAME` | varchar(50) | Name of the TV series.            |
 
-Each main entity has a unique primary key:
+#### EPISODE
 
-```text
-USERS              → USER_ID
-PROFILE            → PROFILE_ID
-SUBSCRIPTION       → SUBSCRIPTION_ID
-SUBSCRIPTION_PLAN  → PLAN_ID
-WATCH_HISTORY      → WATCH_HISTORY_ID
-CONTENT            → CONTENT_ID
-TV_SERIES          → SERIES_ID
-```
+| Attribute        | Data Type   | Description                                      |
+| ---------------- | ----------- | ------------------------------------------------ |
+| `CONTENT_ID`     | varchar(20) | Primary key and foreign key referencing Content. |
+| `SERIES_ID`      | varchar(20) | Foreign key referencing TV Series.               |
+| `EPISODE_NUMBER` | int         | Episode number within a series/season.           |
+| `SEASON_NUMBER`  | int         | Season number of the episode.                    |
 
-`MOVIES` and `EPISODE` use `CONTENT_ID` to identify their corresponding content.
+#### WATCH_HISTORY
 
----
-
-### Foreign Key Constraints
-
-Examples:
-
-```text
-PROFILE.USER_ID
-        ↓
-USERS.USER_ID
-```
-
-```text
-SUBSCRIPTION.USER_ID
-        ↓
-USERS.USER_ID
-```
-
-```text
-SUBSCRIPTION.PLAN_ID
-        ↓
-SUBSCRIPTION_PLAN.PLAN_ID
-```
-
-```text
-WATCH_HISTORY.PROFILE_ID
-        ↓
-PROFILE.PROFILE_ID
-```
-
-```text
-WATCH_HISTORY.CONTENT_ID
-        ↓
-CONTENT.CONTENT_ID
-```
-
-```text
-EPISODE.SERIES_ID
-        ↓
-TV_SERIES.SERIES_ID
-```
-
-These constraints maintain referential integrity between related tables.
+| Attribute          | Data Type   | Description                                      |
+| ------------------ | ----------- | ------------------------------------------------ |
+| `WATCH_HISTORY_ID` | varchar(20) | Unique identifier of a watch history record.     |
+| `PROFILE_ID`       | varchar(20) | References the profile that watched the content. |
+| `CONTENT_ID`       | varchar(20) | References the watched content.                  |
+| `WATCH_DURATION`   | int         | Amount of content watched.                       |
+| `COMPLETED`        | boolean     | Indicates whether the content was completed.     |
 
 ---
 
-## 13. Logical Schema
+### 2.2 Logical Schema Mapping
 
-The EER diagram can be mapped into the following relational schema:
+The EER model is mapped into the following relational schema:
 
 ```text
 USERS(
     USER_ID PK,
     USERNAME,
     PASSWORD,
-    EMAIL,
-    ROLE
+    EMAIL
 )
 
 PROFILE(
@@ -466,47 +383,36 @@ WATCH_HISTORY(
 
 ---
 
-## 14. Database Design Flow
+### 2.3 Normalization Verification
 
-The project follows this development process:
+The database design should be verified according to the following normalization levels:
 
-```text
-Requirements
-     ↓
-Business Rules
-     ↓
-EER Diagram
-     ↓
-Logical Schema Mapping
-     ↓
-Normalization
-     ↓
-SQL Implementation
-     ↓
-Testing
-```
+#### First Normal Form (1NF)
 
----
+Each table contains atomic values, and each record is uniquely identified by a primary key.
 
-## 15. Normalization
+#### Second Normal Form (2NF)
 
-The database design should be checked using:
+The tables should have no partial dependency of non-key attributes on part of a composite primary key.
 
-* **1NF – First Normal Form**
-* **2NF – Second Normal Form**
-* **3NF – Third Normal Form**
-* **BCNF – Boyce-Codd Normal Form**, where applicable
+#### Third Normal Form (3NF)
 
-Normalization helps:
+Non-key attributes should depend only on the primary key and not on other non-key attributes.
 
-* Reduce data redundancy
-* Prevent update anomalies
-* Maintain data consistency
-* Improve database organization
+#### BCNF
+
+Where applicable, every determinant should be a candidate key.
+
+Normalization is used to:
+
+* Reduce data redundancy.
+* Prevent update anomalies.
+* Improve data consistency.
+* Maintain a clear database structure.
 
 ---
 
-## 16. Suggested Project Structure
+## 3. Project Structure
 
 ```text
 Mini-Netflix/
@@ -529,52 +435,36 @@ Mini-Netflix/
 
 ---
 
-## 17. Technologies
+## 4. Technologies
 
-The project can be implemented using:
-
-* **EER Diagram** – Conceptual database design
+* **EER Diagram** – Conceptual database modeling
 * **SQL** – Database implementation
 * **MySQL / SQL Server / PostgreSQL** – Database Management System
-* **Git & GitHub** – Version control
-* **Microsoft Word** – Project report
-* **Microsoft PowerPoint** – Presentation
+* **Git & GitHub** – Version control and project management
+* **Microsoft Word** – Project documentation
+* **Microsoft PowerPoint** – Project presentation
 
 ---
 
-## 18. Project Deliverables
+## 5. Conclusion
 
-The project includes:
+The **On-Demand Streaming Platform (Mini-Netflix)** project demonstrates how an EER model can be used to design a database for an online streaming service.
 
-* [x] Project description
-* [x] Business rules and constraints
-* [x] EER diagram
-* [x] EER specialization/generalization
-* [x] Logical schema mapping
-* [x] Normalization analysis
-* [x] Data dictionary
-* [x] SQL table creation
-* [x] Sample data
-* [x] SQL queries
-* [x] Project report
-* [x] Presentation
+The system manages users, profiles, subscriptions, subscription plans, content, movies, TV series, episodes, and watch history.
+
+The project demonstrates important database concepts including:
+
+* Entity-Relationship Modeling
+* EER Specialization
+* One-to-Many Relationships
+* Primary Keys and Foreign Keys
+* Referential Integrity
+* Logical Schema Mapping
+* Database Normalization
+
+The resulting database provides a structured foundation for managing the core operations of a simplified on-demand streaming platform.
 
 ---
 
-## 19. Conclusion
-
-The **On-Demand Streaming Platform (Mini-Netflix)** project demonstrates the design of a relational database for a simplified streaming service.
-
-The EER model manages users, profiles, subscriptions, subscription plans, content, movies, TV series, episodes, and watch history.
-
-The most important database concepts demonstrated in this project are:
-
-* **Entity-Relationship modeling**
-* **1:N relationships**
-* **Specialization / Generalization**
-* **Primary and foreign keys**
-* **Referential integrity**
-* **Logical schema mapping**
-* **Database normalization**
-
-The final database provides a structured foundation for managing an on-demand streaming platform.
+**Project:** On-Demand Streaming Platform (Mini-Netflix)
+**Team:** Group 3 – CHANG LINH NGU LAM
