@@ -1,0 +1,14 @@
+CAP NHAT TIM KIEM PROFILE (GIAI DOAN 1)
+
+CACH NHANH NHAT: Thay 3 file sau vao project dang chay:
+- app.py (thu muc goc)
+- templates/profiles.html
+- static/style.css
+
+Khong thay .env; khong thay database; khong can INSERT lai du lieu.
+Dung Flask bang Ctrl+C; chay lai python app.py.
+Mo http://127.0.0.1:5000/profiles
+Nhap Profile ID, ten profile hoac username; User ID la tuy chon.
+Ket qua co nut Xem goi de vao profile detail.
+
+Ban ZIP nay da bao gom chuc nang TV Series -> Episodes va Subscription cua ban truoc.

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Choose Your Subscription Plan</h1>
+
+<div class="cards">
+{% for p in plans %}
+<article class="card plan-card">
+  <span class="tag">{{ p.plan_id }}</span>
+  <h2>{{ p.plan_name }}</h2>
+  <div class="number">${{ p.price }}</div>
+  <p>Chất lượng: <strong>{{ p.quality }}</strong></p>
+  <p>Giới hạn Profile: <strong>{{ p.max_profiles }}</strong></p>
+  <form action="{{ url_for('activate_plan', plan_id=p.plan_id) }}" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <button type="submit">Activate {{ p.plan_name }}</button>
+  </form>
+</article>
+{% endfor %}
+</div>
+
+<p><a class="back-link" href="{{ url_for('subscriptions') }}">Xem subscription của tôi →</a></p>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<a class="back-link" href="{{ url_for('series') }}">← Quay lại TV Series</a>
+<h1>{{ series.series_name }}</h1>
+<p class="muted">Series ID: {{ series.series_id }} · {{ episodes|length }} tập đang hiển thị</p>
+<div class="season-tabs">
+  <a class="season-tab {% if selected_season is none %}active{% endif %}"
+     href="{{ url_for('series_detail', series_id=series.series_id) }}">Tất cả các mùa</a>
+  {% for s in seasons %}
+  <a class="season-tab {% if selected_season == s.season_number %}active{% endif %}"
+     href="{{ url_for('series_detail', series_id=series.series_id, season=s.season_number) }}">
+    Season {{ s.season_number }} ({{ s.episode_count }})
+  </a>
+  {% endfor %}
+</div>
+<div class="table-scroll">
+  <table>
+    <thead><tr><th>Mùa</th><th>Tập</th><th>Mã</th><th>Tên episode</th><th>Thời lượng</th><th>Ngày phát hành</th><th>Mô tả</th><th>Xem</th></tr></thead>
+    <tbody>
+    {% for e in episodes %}
+      <tr>
+        <td>{{ e.season_number }}</td>
+        <td>{{ e.episode_number }}</td>
+        <td>{{ e.content_id }}</td>
+        <td><strong>{{ e.title }}</strong></td>
+        <td>{{ e.duration }} phút</td>
+        <td>{{ e.release_date if e.release_date else '—' }}</td>
+        <td class="description-cell">{{ e.description or '—' }}</td><td><a href="{{url_for('watch',content_id=e.content_id)}}">▶ Xem</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="8">Không tìm thấy episode cho mùa đã chọn.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

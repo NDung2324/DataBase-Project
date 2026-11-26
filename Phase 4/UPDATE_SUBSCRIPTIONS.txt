@@ -1,0 +1,22 @@
+MINI-NETFLIX PHASE 4 - SUBSCRIPTION UPDATE
+
+Giu nguyen .env cua project dang chay.
+
+Neu project da cai cap TV Series: copy cac file sau de ghi de/bo sung:
+- app.py
+- templates/base.html
+- templates/profiles.html
+- templates/plans.html (moi)
+- templates/subscriptions.html (moi)
+- templates/profile_detail.html (moi)
+- static/style.css
+
+Neu chua cai cap TV Series: thay toan bo source trong project (TRU .env).
+
+Dung server: CTRL+C, sau do python app.py
+Kiem tra: http://127.0.0.1:5000/plans
+          http://127.0.0.1:5000/subscriptions
+          http://127.0.0.1:5000/profiles
+
+Database schema: subscription.user_id -> users.user_id, profile.user_id -> users.user_id.
+Subscription thuoc User, khong thuoc rieng Profile.

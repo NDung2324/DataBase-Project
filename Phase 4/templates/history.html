@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>My Watch History</h1>
+<p class="muted">Tiến độ của Profile <strong>{{profile.profile_name}}</strong>. Nội dung chưa hoàn thành có thể xem tiếp; nội dung đã hoàn thành có thể xem lại từ đầu.</p>
+<p><a class="action-link" href="{{url_for('movies')}}">Xem thêm phim</a></p>
+<div class="table-scroll"><table>
+<thead><tr><th>Nội dung</th><th>Tiến độ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+<tbody>{% for x in history %}
+<tr>
+<td><strong>{{x.title}}</strong><p class="muted">{{x.content_id}}</p></td>
+<td>{{x.watch_duration}} / {{x.duration}} phút</td>
+<td>{{'Đã xem xong' if x.completed else 'Chưa xem xong'}}</td>
+<td>{% if x.completed %}
+  <a class="action-link" href="{{url_for('watch',content_id=x.content_id,restart=1)}}">↻ Xem lại</a>
+{% else %}
+  <a class="action-link" href="{{url_for('watch',content_id=x.content_id)}}">▶ Xem tiếp</a>
+{% endif %}</td>
+</tr>
+{% else %}<tr><td colspan="4">Chưa có Watch History của Profile này.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

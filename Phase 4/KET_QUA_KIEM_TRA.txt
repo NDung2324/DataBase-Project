@@ -1,0 +1,49 @@
+MINI NETFLIX PHASE 4 - KET QUA KIEM TRA
+Ngay: 24/11/2026
+Database: mini_netflix_check
+
+40/40 checks PASS.
+Read-only pages were checked against the project database.
+Write flows were checked in a separate disposable database, which was removed.
+Original nine-table row counts were unchanged after testing.
+
+PASS - Anonymous pages redirect to login
+PASS - Login page renders
+PASS - Login with project account
+PASS - Select own project profile
+PASS - Live data GET /
+PASS - Live data GET /profiles
+PASS - Live data GET /profiles/PR644656EA5E6A4C
+PASS - Live data GET /plans
+PASS - Live data GET /subscriptions
+PASS - Live data GET /movies
+PASS - Live data GET /movies?q=Legend
+PASS - Live data GET /series
+PASS - Live data GET /history
+PASS - Live series episodes
+PASS - Live watch page
+PASS - CSRF rejection
+PASS - Live database row counts unchanged
+PASS - Login page renders
+PASS - Login with project account
+PASS - Cannot select another user profile
+PASS - Cannot read another user profile
+PASS - Select test profile
+PASS - Create profile within plan limit
+PASS - Second profile persisted
+PASS - Plan reaches three profiles
+PASS - Profile limit trigger reaches web feedback
+PASS - Plan downgrade blocked with excess profiles
+PASS - Plan upgrade endpoint
+PASS - Only one active subscription after upgrade
+PASS - New active plan persisted
+PASS - Test player renders
+PASS - Watch insert from web
+PASS - Unfinished watch updates existing record
+PASS - Invalid duration does not change history
+PASS - Completion flag persisted
+PASS - Replay starts a new viewing record
+PASS - History page after writes
+PASS - Logout endpoint
+PASS - Protected page after logout
+PASS - Original database unchanged after all tests

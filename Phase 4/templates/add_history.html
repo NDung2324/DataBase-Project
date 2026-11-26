@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% block content %}
+<a class="back-link" href="{{ url_for('history') }}">← Watch History</a>
+<h1>Add Watch History</h1>
+<p class="muted">Tạo một lượt xem. Trigger <code>trg_validate_watch_duration</code> sẽ kiểm tra thời lượng xem không vượt thời lượng nội dung.</p>
+<form method="post" class="entry-form">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <label>Profile ID <span class="required">*</span>
+    <input name="profile_id" maxlength="20" required value="{{ values.profile_id }}" placeholder="Ví dụ: PR1071">
+  </label>
+  <label>Content ID <span class="required">*</span>
+    <input name="content_id" maxlength="20" required value="{{ values.content_id }}" placeholder="Ví dụ: MV617">
+  </label>
+  <label>Watch Duration (phút) <span class="required">*</span>
+    <input type="number" name="watch_duration" min="0" step="1" required value="{{ values.watch_duration }}" placeholder="Số phút đã xem">
+  </label>
+  <label>Completed
+    <select name="completed"><option value="0" {% if values.completed == '0' %}selected{% endif %}>Chưa hoàn thành</option><option value="1" {% if values.completed == '1' %}selected{% endif %}>Đã hoàn thành</option></select>
+  </label>
+  <p class="muted">Watch History ID được hệ thống tự sinh. Chọn Content ID từ danh sách ở trang Movies hoặc TV Series.</p>
+  <button type="submit">Add Watch History</button>
+</form>
+<h2>Ví dụ Content ID (30 nội dung đầu tiên)</h2>
+<div class="table-scroll"><table><thead><tr><th>Content ID</th><th>Tiêu đề</th><th>Thời lượng</th><th>Chọn</th></tr></thead><tbody>
+{% for c in samples %}<tr><td>{{ c.content_id }}</td><td>{{ c.title }}</td><td>{{ c.duration }} phút</td><td><a href="{{ url_for('add_watch_history', profile_id=values.profile_id, content_id=c.content_id) }}">Chọn nội dung</a></td></tr>{% else %}<tr><td colspan="4">Chưa có Content</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

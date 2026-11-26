@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>TV Series</h1>
+<p class="muted">Chọn một series để xem các mùa và danh sách episode.</p>
+<div class="cards">
+{% for s in series %}
+  <a class="series-link" href="{{ url_for('series_detail', series_id=s.series_id) }}">
+    <article class="card series-card">
+      <h3>{{ s.series_name }}</h3>
+      <p class="muted">{{ s.series_id }}</p>
+      <span class="tag">{{ s.episodes }} tập</span>
+      <p class="link-hint">Xem episodes →</p>
+    </article>
+  </a>
+{% else %}
+  <p>Chưa có TV series.</p>
+{% endfor %}
+</div>
+{% endblock %}

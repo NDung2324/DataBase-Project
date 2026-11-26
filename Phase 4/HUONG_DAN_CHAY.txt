@@ -1,0 +1,33 @@
+MINI NETFLIX PHASE 4 ĐÃ KẾT NỐI MYSQL
+
+Thư mục đã cập nhật trên máy:
+C:\Users\ngocd\Downloads\MiniNetflix_Phase4
+
+CÁCH MỞ WEB
+1. Mở thư mục trên bằng File Explorer.
+2. Bấm đúp CHAY_WEB.bat.
+3. Trình duyệt sẽ mở http://127.0.0.1:5000/login.
+4. Giữ cửa sổ chương trình mở khi dùng web. Nhấn Ctrl+C trong cửa sổ đó để dừng.
+
+TÀI KHOẢN ĐĂNG NHẬP WEBSITE
+Bấm đúp XEM_TAI_KHOAN_MAU.bat để xem một vài tài khoản mẫu có thể dùng.
+Dùng username và password được hiện trong cửa sổ đó để đăng nhập website.
+Đây là tài khoản trong bảng users của bài tập; tài khoản root dùng để kết nối MySQL.
+
+CÁCH THỬ
+Login → My Profiles → chọn Profile → Movies hoặc TV Series → chọn nội dung
+→ Play → Dừng và lưu tiến độ → My History.
+Bộ xem mô phỏng 1 giây thực tương ứng 1 phút phim; không phát video thật.
+
+DATABASE
+Đã chọn mini_netflix_check tại 127.0.0.1:3306.
+Đã xác nhận đủ 9 bảng và 2 trigger; mật khẩu MySQL được giữ riêng trong .env.
+Bấm KIEM_TRA_DATABASE.bat để kiểm tra lại.
+Bấm MO_CAU_HINH.bat nếu cần đổi cấu hình, lưu rồi khởi động lại web.
+
+ĐÃ KIỂM TRA
+40/40 kiểm tra tích hợp đạt: đăng nhập, giới hạn profile, phân quyền profile,
+đổi gói, danh sách nội dung, lưu và tiếp tục tiến độ, xem lại và đăng xuất.
+Các thao tác ghi được thử trong database tạm riêng rồi dọn sạch.
+Số dòng của database dự án vẫn giữ nguyên sau khi kiểm thử.
+Chi tiết nằm trong KET_QUA_KIEM_TRA.txt của project.
