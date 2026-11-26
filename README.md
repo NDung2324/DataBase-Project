@@ -1,470 +1,267 @@
-# Database Project Report
+# MiniNetflix Phase 4
 
-**Project ID & Title:** On-Demand Streaming Platform (Mini-Netflix)
+README dự án và hướng dẫn cài đặt vận hành
 
----
+MiniNetflix là ứng dụng minh họa quản lý dịch vụ xem phim bằng Flask và MySQL. Dự án kết nối giao diện web với chín bảng dữ liệu của Phase 3, hỗ trợ tài khoản, profile, gói đăng ký, danh mục phim và lịch sử xem. Trình xem mô phỏng thời gian xem; ứng dụng không phát video thật.
 
-## A. Project Identity
+### Thông tin repository và học phần
 
-**Team Name:** Group 3 – CHANG LINH NGU LAM
+| Thông tin | Nội dung |
+| --- | --- |
+| Repository | [NDung2324/DataBase-Project](https://github.com/NDung2324/DataBase-Project) |
+| Học phần | Cơ sở dữ liệu  |
+| Lớp học phần | E24CQCE02-N |
+| Nhóm | Ba chang linh ngu lam |
+| Phạm vi | Phase 3 database và Phase 4 Flask client demo |
 
-**Team Members:**
+### Thành viên thực hiện
 
-1. **Lê Ngọc Dũng** — n24dece065@student.ptithcm.edu.vn
-2. **Lê Phạm Khánh Huy** — n24dece072@student.ptithcm.edu.vn
-3. **Phan Giảng Bình** — n24dece056@student.ptithcm.edu.vn
+| Họ và tên | Mã sinh viên | Email sinh viên |
+| --- | --- | --- |
+| Lê Ngọc Dũng | N24DECE065 | n24dece065@student.ptithcm.edu.vn |
+| Lê Phạm Khánh Huy | N24DECE072 | n24dece072@student.ptithcm.edu.vn |
+| Phan Giảng Bình | N24DECE056 | n24dece056@student.ptithcm.edu.vn |
 
-**Project Title:** On-Demand Streaming Platform (Mini-Netflix)
+### Phân công công việc
 
----
+| Giai đoạn | Thành viên thực hiện |
+| --- | --- |
+| Phase 1 | Lê Ngọc Dũng, Lê Phạm Khánh Huy, Phan Giảng Bình |
+| Phase 2 | Lê Ngọc Dũng, Lê Phạm Khánh Huy, Phan Giảng Bình |
+| Phase 3 | Lê Phạm Khánh Huy, Phan Giảng Bình |
+| Phase 4 | Lê Ngọc Dũng, Lê Phạm Khánh Huy, Phan Giảng Bình |
 
-## B. Report Structure
+### Công nghệ và chức năng
 
-### 1. Introduction & Project Scope
+Python 3.12, Flask, Jinja2, HTML, CSS, JavaScript, MySQL 8.0 và mysql-connector-python. Phiên bản kiểm tra trên máy: Flask 3.1.3, Connector/Python 9.7.0 và MySQL Server 8.0.46.
 
-*(Adapted from ISO/IEC/IEEE 29148)*
+Người dùng có thể đăng nhập, tìm và chọn profile của mình, tạo profile trong giới hạn gói, xem phim hoặc series theo mùa và tập, kích hoạt gói mô phỏng, lưu tiến độ xem và xem lịch sử của profile đang chọn.
 
-An on-demand streaming platform needs to manage a large amount of information every day, including user accounts, user profiles, subscription plans, subscriptions, movies, TV series episodes, and watch histories. If this information is not organized properly, it may lead to duplicated data, inconsistent records, or difficulties in tracking users' viewing activities.
+## 1 Mã nguồn và tài liệu trong repository
 
-The **On-Demand Streaming Platform (Mini-Netflix)** is designed as a centralized database system for managing the basic operations of a streaming service. The system focuses on managing users, profiles, subscriptions, subscription plans, content, movies, TV series, episodes, and watch history.
-
-The database also uses an **EER specialization** for the `CONTENT` entity. Content is divided into two subtypes: `MOVIES` and `EPISODE`. This allows common content information to be stored in the `CONTENT` entity while specific information is stored in the corresponding subtype.
-
----
-
-### 1.1 System Objective
-
-The main objective of the system is to provide a structured database for storing and managing essential information of an on-demand streaming platform.
-
-The system is designed to:
-
-* Store and manage user account information.
-* Store and manage user profiles.
-* Allow users to create multiple profiles.
-* Manage subscription information.
-* Manage different subscription plans.
-* Store plan price, quality, and maximum number of profiles.
-* Store and manage streaming content.
-* Classify content into Movies and Episodes.
-* Store TV series information.
-* Associate episodes with their corresponding TV series.
-* Maintain users' watch history.
-* Store watch duration and completion status.
-* Maintain relationships between profiles and watched content.
-* Maintain data consistency through primary keys and foreign keys.
-
----
-
-### 1.2 Business Rules & Constraints
-
-#### 1.2.1 User and Profile
-
-* **BR1:** Each User must have a unique `USER_ID`.
-* **BR2:** A User may create many Profiles.
-* **BR3:** Each Profile must belong to exactly one User.
-* **BR4:** Each Profile must have a unique `PROFILE_ID`.
-* **BR5:** A Profile contains a profile name and birthdate.
-
-#### 1.2.2 Subscription and Subscription Plan
-
-* **BR6:** Each Subscription must have a unique `SUBSCRIPTION_ID`.
-* **BR7:** A User may have many Subscription records.
-* **BR8:** Each Subscription must belong to exactly one User.
-* **BR9:** Each Subscription must use exactly one Subscription Plan.
-* **BR10:** One Subscription Plan may be used by many Subscriptions.
-* **BR11:** Each Subscription Plan must have a unique `PLAN_ID`.
-* **BR12:** A Subscription Plan stores the plan name, price, quality, and maximum number of profiles.
-* **BR13:** Each Subscription must contain a status, start date, and end date.
-
-#### 1.2.3 Content
-
-* **BR14:** Each Content item must have a unique `CONTENT_ID`.
-* **BR15:** Each Content item stores a title, description, release date, duration, and content type.
-* **BR16:** Content is specialized into Movies and Episodes.
-* **BR17:** Each Movie references one existing Content item.
-* **BR18:** Each Episode references one existing Content item.
-
-#### 1.2.4 TV Series and Episode
-
-* **BR19:** Each TV Series must have a unique `SERIES_ID`.
-* **BR20:** Each TV Series must have a series name.
-* **BR21:** An Episode must belong to exactly one TV Series.
-* **BR22:** One TV Series may contain many Episodes.
-* **BR23:** Each Episode must have an episode number and season number.
-* **BR24:** `EPISODE.SERIES_ID` must reference an existing `TV_SERIES.SERIES_ID`.
-
-#### 1.2.5 Watch History
-
-* **BR25:** Each Watch History record must have a unique `WATCH_HISTORY_ID`.
-* **BR26:** A Profile may have many Watch History records.
-* **BR27:** Each Watch History record must belong to exactly one Profile.
-* **BR28:** One Content item may appear in many Watch History records.
-* **BR29:** Each Watch History record must reference exactly one Content item.
-* **BR30:** Watch History stores the watch duration and whether the content was completed.
-* **BR31:** `WATCH_HISTORY.PROFILE_ID` must reference an existing Profile.
-* **BR32:** `WATCH_HISTORY.CONTENT_ID` must reference an existing Content item.
-
----
-
-### 1.2.6 Main Constraints
-
-The database design applies the following major constraints:
-
-* `USER_ID` must be unique.
-* `PROFILE_ID` must be unique.
-* `SUBSCRIPTION_ID` must be unique.
-* `PLAN_ID` must be unique.
-* `WATCH_HISTORY_ID` must be unique.
-* `CONTENT_ID` must be unique.
-* `SERIES_ID` must be unique.
-* `PROFILE.USER_ID` must reference an existing User.
-* `SUBSCRIPTION.USER_ID` must reference an existing User.
-* `SUBSCRIPTION.PLAN_ID` must reference an existing Subscription Plan.
-* `WATCH_HISTORY.PROFILE_ID` must reference an existing Profile.
-* `WATCH_HISTORY.CONTENT_ID` must reference an existing Content.
-* `MOVIES.CONTENT_ID` must reference an existing Content.
-* `EPISODE.CONTENT_ID` must reference an existing Content.
-* `EPISODE.SERIES_ID` must reference an existing TV Series.
-* An Episode cannot belong to a non-existing TV Series.
-* A Subscription cannot use a non-existing Subscription Plan.
-
-These constraints help maintain **referential integrity and data consistency** throughout the database.
-
----
-
-## 2. Database Design
-
-*(ISO/IEC 19505 / IE Standards)*
-
-### 2.1 Conceptual Model (ER/EER Diagram)
-
-The conceptual database model is represented using an **Enhanced Entity-Relationship (EER) diagram**.
-
-The main entities in the system are:
-
-* `USERS`
-* `PROFILE`
-* `SUBSCRIPTION`
-* `SUBSCRIPTION_PLAN`
-* `WATCH_HISTORY`
-* `CONTENT`
-* `MOVIES`
-* `EPISODE`
-* `TV_SERIES`
-
-The EER model contains several important relationships:
+Cấu trúc đề xuất cho repository gồm mã nguồn Flask, tài nguyên giao diện, database và tài liệu bên dưới. Các thư mục database và docs cần chứa các file tương ứng khi đóng gói bản nộp.
 
 ```text
-USERS 1 ───── creates ───── N PROFILE
-
-USERS 1 ───── subscribes to ───── N SUBSCRIPTION
-
-SUBSCRIPTION N ───── uses ───── 1 SUBSCRIPTION_PLAN
-
-PROFILE 1 ───── watches ───── N WATCH_HISTORY
-
-WATCH_HISTORY N ───── on ───── 1 CONTENT
-
-CONTENT 1 ───── is a ───── MOVIES
-                    \
-                     └──── EPISODE
-
-EPISODE N ───── belongs to ───── 1 TV_SERIES
+MiniNetflix_Phase4/
+  README.md
+  app.py
+  run_local.py
+  requirements.txt
+  requirements.lock.txt
+  .env.example
+  .gitignore
+  templates/
+  static/
+  CHAY_WEB.bat
+  CAI_DAT_MOI_TRUONG.bat
+  KIEM_TRA_DATABASE.bat
+  MO_CAU_HINH.bat
+  XEM_TAI_KHOAN_MAU.bat
+  kiem_tra_database.py
+  tai_khoan_mau.py
+  database/
+    project.sql
+  docs/
+    report_phase_3_final.docx
+    kiem_thu_validation.sql
+    kiem_tra_11_truy_van.sql
+    ket_qua_11_truy_van_project1.csv
+    ket_qua_kiem_thu_project_sql.json
+    README_MiniNetflix_Phase4_da_chinh.docx
 ```
 
-#### EER Specialization
+### Vai trò các thành phần
 
-The `CONTENT` entity is the superclass of two specialized entities:
+app.py chứa kết nối MySQL, xác thực, xử lý profile, gói đăng ký và lịch sử xem. templates chứa giao diện Jinja2; static chứa tài nguyên giao diện. run_local.py kiểm tra kết nối, khởi động web và mở trình duyệt. requirements.txt mô tả thư viện cần cài; requirements.lock.txt ghi phiên bản đã dùng trên máy kiểm tra.
 
-```text
-                    CONTENT
-                       |
-                      is a
-                    /     \
-                   /       \
-              MOVIES      EPISODE
-                            |
-                         belongs to
-                            |
-                        TV_SERIES
+project.sql chứa đầy đủ cấu trúc database và dữ liệu mẫu của chín bảng, ba view và hai trigger. Báo cáo Phase 3 trình bày mô hình ER/EER, schema, PK/FK, chuẩn hóa, data dictionary, DDL, DML và truy vấn.
+
+### Cấu hình riêng của máy
+
+Giữ .env ở máy cá nhân; chỉ đưa .env.example không chứa mật khẩu thật vào repository. Không đưa .venv, __pycache__ hoặc các file cấu hình riêng của máy lên repository. Dữ liệu tài khoản trong dump chỉ dùng cho bài tập và demo.
+
+## 2 Cài đặt và nạp database
+
+### Yêu cầu trên máy mới
+
+Cài Python 3.12 có hỗ trợ pip, MySQL Server 8.0 và MySQL Workbench. MySQL Server phải đang chạy. Workbench là công cụ giao diện để kết nối và chạy SQL; Flask dùng MySQL Server để lưu và đọc dữ liệu.
+
+### Nạp file project sql bằng Workbench
+
+1. Mở kết nối MySQL trên máy, thường là 127.0.0.1, cổng 3306. Nhập mật khẩu MySQL đã đặt khi cài máy đó.
+
+2. Chọn Server → Data Import → Import from Self-Contained File. Chọn file database/project.sql trong repository.
+
+3. Chọn Start Import và đợi Import Completed. Mở tab Schemas bên trái rồi bấm Refresh để thấy project1.
+
+4. File dump chứa CREATE DATABASE project1 và USE project1. Vì vậy tên database sau khi nạp là project1; lựa chọn Default Target Schema không đổi tên này. Dump có các lệnh DROP TABLE để khôi phục bảng, nên chỉ nạp vào môi trường demo phù hợp và sao lưu nếu project1 đã có dữ liệu cần giữ.
+
+### Số dòng của file mới trước khi thao tác trên UI
+
+| Bảng | Số dòng trong project.sql | Bảng | Số dòng trong project.sql |
+| --- | --- | --- | --- |
+| users | 1000 | profile | 2000 |
+| content | 1123 | movies | 723 |
+| episode | 400 | tv_series | 8 |
+| subscription | 1000 | subscription_plan | 3 |
+| watch_history | 5000 |  |  |
+
+Cấu trúc còn có ba view và hai trigger. Đây là số liệu đã khôi phục thử từ project.sql ngày 25/11/2026. Sau khi tạo profile, đổi gói hoặc lưu lịch sử bằng UI, số dòng có thể thay đổi.
+
+### Nạp dữ liệu đầy đủ
+
+Chỉ cần nạp project.sql để có toàn bộ cấu trúc và dữ liệu mẫu. Không chạy thêm các file INSERT rời trên cùng database đã nạp đầy đủ vì có thể trùng khóa hoặc làm thay đổi dataset dùng để đối chiếu kết quả.
+
+## 3 Cấu hình và khởi động website
+
+### Tạo file cấu hình
+
+Mở thư mục mã nguồn. Chép .env.example thành .env nếu chưa có. Đặt DB_NAME=project1 và sửa thông tin kết nối theo MySQL của máy đang chạy. Thay các giá trị trong dấu ngoặc nhọn bằng thông tin thực tế.
+
+```dotenv
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=<tai_khoan_mysql>
+DB_PASSWORD=<mat_khau_mysql_tren_may>
+DB_NAME=project1
+FLASK_SECRET_KEY=<chuoi_ngau_nhien_rieng_cua_may>
 ```
 
-`CONTENT` stores attributes common to streaming content:
+Sau khi nạp project.sql, lưu .env với DB_NAME=project1 rồi khởi động lại website. Nếu .env.example trong mã nguồn còn tên database khác, thay tên đó bằng project1 khi tạo .env. Tài khoản MySQL dùng để kết nối database khác với tài khoản đăng nhập website trong bảng users.
 
-* `CONTENT_ID`
-* `TITLE`
-* `DESCRIPTION`
-* `RELEASE_DATE`
-* `DURATION`
-* `CONTENT_TYPE`
+### Chạy nhanh trên Windows
 
-`MOVIES` represents movie content and uses `CONTENT_ID`.
+1. Bấm CAI_DAT_MOI_TRUONG.bat để tạo môi trường Python và cài thư viện khi chạy lần đầu hoặc chuyển sang máy khác. run_local.py và các file .bat nêu trong hướng dẫn đã được xác nhận có trong thư mục MiniNetflix_Phase4 ngày 26/11/2026.
 
-`EPISODE` represents TV series episodes and contains:
+2. Bấm KIEM_TRA_DATABASE.bat để kiểm tra kết nối, số dòng các bảng và hai trigger. Nếu báo lỗi, sửa .env bằng MO_CAU_HINH.bat.
 
-* `CONTENT_ID`
-* `SERIES_ID`
-* `EPISODE_NUMBER`
-* `SEASON_NUMBER`
+3. Bấm CHAY_WEB.bat. Trình duyệt sẽ mở [http://127.0.0.1:5000/login](http://127.0.0.1:5000/login). Giữ chương trình đang chạy trong lúc trình bày; nhấn Ctrl+C trong cửa sổ chạy để dừng.
 
----
+### Các lệnh cài và chạy thủ công
 
-### Entity Overview
+Mở PowerShell tại thư mục MiniNetflix_Phase4. Nếu máy đã có môi trường .venv hoạt động thì bỏ qua dòng tạo môi trường.
 
-| **Entity**            | **Primary Key (PK)** | **Purpose**                                        |
-| --------------------- | -------------------- | -------------------------------------------------- |
-| **USERS**             | `USER_ID`            | Stores user account information.                   |
-| **PROFILE**           | `PROFILE_ID`         | Stores profiles created by users.                  |
-| **SUBSCRIPTION**      | `SUBSCRIPTION_ID`    | Stores user subscription information.              |
-| **SUBSCRIPTION_PLAN** | `PLAN_ID`            | Stores available subscription plans.               |
-| **WATCH_HISTORY**     | `WATCH_HISTORY_ID`   | Stores records of content watched by profiles.     |
-| **CONTENT**           | `CONTENT_ID`         | Stores common information about streaming content. |
-| **MOVIES**            | `CONTENT_ID` (FK)    | Represents movie content as a subtype of Content.  |
-| **EPISODE**           | `CONTENT_ID` (FK)    | Represents an episode as a subtype of Content.     |
-| **TV_SERIES**         | `SERIES_ID`          | Stores TV series information.                      |
-
----
-
-### Entity Attributes
-
-#### USERS
-
-| Attribute  | Data Type   | Description                  |
-| ---------- | ----------- | ---------------------------- |
-| `USER_ID`  | varchar(20) | Unique identifier of a user. |
-| `USERNAME` | varchar(20) | User's username.             |
-| `PASSWORD` | varchar(20) | User's password.             |
-| `EMAIL`    | varchar(25) | User's email address.        |
-
-#### PROFILE
-
-| Attribute      | Data Type   | Description                          |
-| -------------- | ----------- | ------------------------------------ |
-| `PROFILE_ID`   | varchar(20) | Unique identifier of a profile.      |
-| `USER_ID`      | varchar(20) | References the owner of the profile. |
-| `PROFILE_NAME` | varchar(20) | Name of the profile.                 |
-| `BIRTHDATE`    | date        | Profile's birthdate.                 |
-
-#### SUBSCRIPTION
-
-| Attribute         | Data Type   | Description                       |
-| ----------------- | ----------- | --------------------------------- |
-| `SUBSCRIPTION_ID` | varchar(20) | Unique subscription identifier.   |
-| `USER_ID`         | varchar(20) | References the subscribed user.   |
-| `PLAN_ID`         | varchar(20) | References the subscription plan. |
-| `STATUS`          | varchar(10) | Current subscription status.      |
-| `START_DATE`      | date        | Subscription start date.          |
-| `END_DATE`        | date        | Subscription end date.            |
-
-#### SUBSCRIPTION_PLAN
-
-| Attribute      | Data Type   | Description                             |
-| -------------- | ----------- | --------------------------------------- |
-| `PLAN_ID`      | varchar(20) | Unique identifier of a plan.            |
-| `PLAN_NAME`    | varchar(20) | Name of the subscription plan.          |
-| `PRICE`        | int         | Price of the plan.                      |
-| `QUALITY`      | varchar(15) | Streaming quality provided by the plan. |
-| `MAX_PROFILES` | int         | Maximum number of profiles allowed.     |
-
-#### CONTENT
-
-| Attribute      | Data Type   | Description                                |
-| -------------- | ----------- | ------------------------------------------ |
-| `CONTENT_ID`   | varchar(20) | Unique identifier of content.              |
-| `TITLE`        | varchar(20) | Title of the content.                      |
-| `DESCRIPTION`  | text        | Description of the content.                |
-| `RELEASE_DATE` | date        | Content release date.                      |
-| `DURATION`     | int         | Duration of the content.                   |
-| `CONTENT_TYPE` | varchar(10) | Type of content, such as Movie or Episode. |
-
-#### MOVIES
-
-| Attribute    | Data Type   | Description                                      |
-| ------------ | ----------- | ------------------------------------------------ |
-| `CONTENT_ID` | varchar(20) | Primary key and foreign key referencing Content. |
-
-#### TV_SERIES
-
-| Attribute     | Data Type   | Description                       |
-| ------------- | ----------- | --------------------------------- |
-| `SERIES_ID`   | varchar(20) | Unique identifier of a TV series. |
-| `SERIES_NAME` | varchar(50) | Name of the TV series.            |
-
-#### EPISODE
-
-| Attribute        | Data Type   | Description                                      |
-| ---------------- | ----------- | ------------------------------------------------ |
-| `CONTENT_ID`     | varchar(20) | Primary key and foreign key referencing Content. |
-| `SERIES_ID`      | varchar(20) | Foreign key referencing TV Series.               |
-| `EPISODE_NUMBER` | int         | Episode number within a series/season.           |
-| `SEASON_NUMBER`  | int         | Season number of the episode.                    |
-
-#### WATCH_HISTORY
-
-| Attribute          | Data Type   | Description                                      |
-| ------------------ | ----------- | ------------------------------------------------ |
-| `WATCH_HISTORY_ID` | varchar(20) | Unique identifier of a watch history record.     |
-| `PROFILE_ID`       | varchar(20) | References the profile that watched the content. |
-| `CONTENT_ID`       | varchar(20) | References the watched content.                  |
-| `WATCH_DURATION`   | int         | Amount of content watched.                       |
-| `COMPLETED`        | boolean     | Indicates whether the content was completed.     |
-
----
-
-### 2.2 Logical Schema Mapping
-
-The EER model is mapped into the following relational schema:
-
-```text
-USERS(
-    USER_ID PK,
-    USERNAME,
-    PASSWORD,
-    EMAIL
-)
-
-PROFILE(
-    PROFILE_ID PK,
-    USER_ID FK,
-    PROFILE_NAME,
-    BIRTHDATE
-)
-
-SUBSCRIPTION_PLAN(
-    PLAN_ID PK,
-    PLAN_NAME,
-    PRICE,
-    QUALITY,
-    MAX_PROFILES
-)
-
-SUBSCRIPTION(
-    SUBSCRIPTION_ID PK,
-    USER_ID FK,
-    PLAN_ID FK,
-    STATUS,
-    START_DATE,
-    END_DATE
-)
-
-CONTENT(
-    CONTENT_ID PK,
-    TITLE,
-    DESCRIPTION,
-    RELEASE_DATE,
-    DURATION,
-    CONTENT_TYPE
-)
-
-MOVIES(
-    CONTENT_ID PK, FK
-)
-
-TV_SERIES(
-    SERIES_ID PK,
-    SERIES_NAME
-)
-
-EPISODE(
-    CONTENT_ID PK, FK,
-    SERIES_ID FK,
-    EPISODE_NUMBER,
-    SEASON_NUMBER
-)
-
-WATCH_HISTORY(
-    WATCH_HISTORY_ID PK,
-    PROFILE_ID FK,
-    CONTENT_ID FK,
-    WATCH_DURATION,
-    COMPLETED
-)
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe kiem_tra_database.py
+.\.venv\Scripts\python.exe run_local.py
 ```
 
----
+Nếu máy không có lệnh py, dùng python -m venv .venv sau khi cài Python và kiểm tra python --version. Có thể dùng requirements.lock.txt thay requirements.txt khi cần cài đúng phiên bản đã kiểm tra.
 
-### 2.3 Normalization Verification
+### Triển khai để trình bày
 
-The database design should be verified according to the following normalization levels:
+Bản bàn giao chạy cục bộ trên 127.0.0.1:5000, debug tắt. Mỗi máy thuyết trình cần MySQL, database đã nạp và .env riêng. Bản này chưa có cấu hình triển khai Internet; hướng dẫn trên là quy trình triển khai demo tại máy.
 
-#### First Normal Form (1NF)
+## 4 Vận hành và luồng trình bày
 
-Each table contains atomic values, and each record is uniquely identified by a primary key.
+| Bước | Thao tác | Kết quả cần quan sát |
+| --- | --- | --- |
+| 1 | Mở XEM_TAI_KHOAN_MAU.bat | Xem tài khoản mẫu của dữ liệu hiện tại trên máy. |
+| 2 | Đăng nhập website | Vào trang chính bằng tài khoản trong bảng users. |
+| 3 | Mở My Profiles và chọn profile | Chỉ hiện profile thuộc tài khoản đang đăng nhập. |
+| 4 | Mở Movies hoặc TV Series | Tìm phim; với series chọn mùa và tập. |
+| 5 | Mở nội dung và bấm Play | Bộ đếm mô phỏng chạy; 1 giây thực tương ứng 1 phút xem. |
+| 6 | Bấm dừng và lưu lịch sử | Tiến độ được gửi về Flask và lưu vào MySQL. |
+| 7 | Mở My Watch History | Xem lịch sử của profile vừa chọn. |
+| 8 | Mở Plans và My Subscriptions | Xem gói và lịch sử; kích hoạt gói là thao tác mô phỏng. |
 
-#### Second Normal Form (2NF)
+### Điều kiện để xem và tạo profile
 
-The tables should have no partial dependency of non-key attributes on part of a composite primary key.
+Tài khoản cần gói ACTIVE còn hiệu lực theo ngày hiện tại để xem nội dung. Việc tạo profile bị giới hạn theo max_profiles của gói. Ba gói trong dữ liệu là FREE, STANDARD và PRO, có giới hạn tương ứng 1, 3 và 5 profile. Kích hoạt gói qua UI tạo thời hạn một tháng và không thu tiền thật.
 
-#### Third Normal Form (3NF)
+### Luồng dữ liệu
 
-Non-key attributes should depend only on the primary key and not on other non-key attributes.
+Trình duyệt gửi yêu cầu tới Flask. Flask kiểm tra phiên đăng nhập, quyền sở hữu profile và dữ liệu đầu vào, sau đó dùng câu SQL có tham số để đọc hoặc ghi MySQL. Database kiểm tra PK, FK, UNIQUE, CHECK, NOT NULL và các trigger trước khi chấp nhận dữ liệu.
 
-#### BCNF
+Trigger trg_validate_watch_duration chạy trước INSERT vào watch_history để từ chối thời gian xem vượt thời lượng nội dung. Trigger trg_validate_profile_limit chạy trước INSERT vào profile để kiểm tra gói đang hoạt động và số profile tối đa. Trigger INSERT không tự bao phủ mọi trường hợp UPDATE hoặc thao tác đồng thời.
 
-Where applicable, every determinant should be a candidate key.
+### Xem lại dữ liệu đã lưu
 
-Normalization is used to:
-
-* Reduce data redundancy.
-* Prevent update anomalies.
-* Improve data consistency.
-* Maintain a clear database structure.
-
----
-
-## 3. Project Structure
-
-```text
-Mini-Netflix/
-│
-├── README.md
-│
-├── docs/
-│   ├── EER_Diagram.png
-│   ├── Logical_Schema.png
-│   └── Project_Report.docx
-│
-├── database/
-│   ├── create_tables.sql
-│   ├── insert_data.sql
-│   └── queries.sql
-│
-└── presentation/
-    └── Mini_Netflix_Presentation.pptx
+```sql
+USE project1;
+SELECT w.watch_history_id, p.profile_name, c.title,
+       w.watch_duration, w.completed
+FROM watch_history w
+JOIN profile p ON p.profile_id=w.profile_id
+JOIN content c ON c.content_id=w.content_id
+WHERE p.profile_id = '<profile_id_vua_chon>';
 ```
 
----
+Thay profile_id bằng ID profile thực tế vừa chọn trên UI. ID lịch sử dùng UUID và bảng không có watched_at, nên thứ tự ID không thể hiện thời điểm xem.
 
-## 4. Technologies
+## 5 Kiểm tra và kết quả đã xác nhận
 
-* **EER Diagram** – Conceptual database modeling
-* **SQL** – Database implementation
-* **MySQL / SQL Server / PostgreSQL** – Database Management System
-* **Git & GitHub** – Version control and project management
-* **Microsoft Word** – Project documentation
-* **Microsoft PowerPoint** – Project presentation
+Ngày 25/11/2026, project.sql được khôi phục vào database thử riêng. Bộ validation, các truy vấn và kiểm tra tích hợp Flask dùng bản sao này, sau đó bản sao được dọn. Tên database thử chỉ phục vụ kiểm tra; tên database chuẩn trong hướng dẫn cài đặt là project1.
 
----
+### Kết quả kiểm tra database và giao diện
 
-## 5. Conclusion
+Khôi phục đủ chín bảng, ba view, hai trigger và CHECK duration &gt; 0. Bộ validation đạt 11/11 PASS: hai trường hợp hợp lệ được nhận và chín trường hợp không hợp lệ bị từ chối đúng cơ chế mong đợi.
 
-The **On-Demand Streaming Platform (Mini-Netflix)** project demonstrates how an EER model can be used to design a database for an online streaming service.
+Các trường hợp gồm thời gian xem hợp lệ, profile trong giới hạn, thời gian xem vượt nội dung, vượt số profile, thiếu gói ACTIVE, giá âm, thời lượng bằng 0, trùng vị trí tập, FK nội dung không tồn tại, completed NULL và ngày kết thúc trước ngày bắt đầu.
 
-The system manages users, profiles, subscriptions, subscription plans, content, movies, TV series, episodes, and watch history.
+Kiểm tra tích hợp với dump mới đã xác nhận đăng nhập, chọn profile và các trang dashboard, profile, gói, đăng ký, phim, series, lịch sử, trang xem mô phỏng trả về thành công. Bằng chứng được lưu trong docs/ket_qua_kiem_thu_project_sql.json. Đây là kiểm tra bằng Flask test client, không thay thế kiểm tra toàn bộ thao tác trên mọi trình duyệt.
 
-The project demonstrates important database concepts including:
+### Số dòng kết quả của 11 truy vấn trên file mới
 
-* Entity-Relationship Modeling
-* EER Specialization
-* One-to-Many Relationships
-* Primary Keys and Foreign Keys
-* Referential Integrity
-* Logical Schema Mapping
-* Database Normalization
+| STT | Truy vấn | Số dòng |
+| --- | --- | --- |
+| 1 | Top 10 most watched movies | 10 |
+| 2 | Total watch time per profile | 2000 |
+| 3 | Profiles without watch history | 300 |
+| 4 | Most watched TV series | 8 |
+| 5 | Users with active subscriptions | 970 |
+| 6 | Nominal active subscription value by plan | 3 |
+| 7 | Most popular content categories | 11 |
+| 8 | Users who watched more than 5 movies | 145 |
+| 9 | Movies longer than the average movie duration | 326 |
+| 10 | Most active users by watch time | 10 |
+| 11 | Users with above average watch time | 459 |
 
-The resulting database provides a structured foundation for managing the core operations of a simplified on-demand streaming platform.
+Bảng trên ghi số dòng thực tế của các truy vấn ngày 25/11/2026; dữ liệu tương ứng nằm trong docs/ket_qua_11_truy_van_project1.csv. Số dòng không chứng minh từng giá trị expected result cũ còn đúng. Các truy vấn có CURDATE phụ thuộc ngày chạy và dữ liệu có thể thay đổi sau thao tác UI; cần xuất lại kết quả khi đổi dataset.
 
----
+## 6 Tự kiểm tra và xử lý lỗi
 
-**Project:** On-Demand Streaming Platform (Mini-Netflix)
-**Team:** Group 3 – CHANG LINH NGU LAM
+### Kiểm tra đúng database và các thành phần
+
+```sql
+USE project1;
+SELECT DATABASE() AS database_dang_dung;
+SHOW FULL TABLES;
+SHOW TRIGGERS;
+SELECT COUNT(*) AS so_view
+FROM information_schema.VIEWS
+WHERE TABLE_SCHEMA=DATABASE();
+SELECT COUNT(*) AS so_trigger
+FROM information_schema.TRIGGERS
+WHERE TRIGGER_SCHEMA=DATABASE();
+```
+
+Kết quả của dump mới trước thao tác demo: 9 bảng dữ liệu, 3 view, 2 trigger. KIEM_TRA_DATABASE.bat in số dòng của cả chín bảng theo database trong .env. Có thể kiểm tra từng bảng bằng SELECT COUNT(*) FROM ten_bang; và đối chiếu bảng số dòng trong phần Cài đặt và nạp database.
+
+Mở docs/kiem_thu_validation.sql trong Workbench rồi chạy toàn bộ file. Bản SQL trong thư mục docs đã dùng USE project1. Bộ kiểm thử tạo procedure phụ, dùng dữ liệu thử trong transaction, rollback dữ liệu thử và xóa procedure phụ. Chạy riêng khi không có transaction đang làm dở. Mở docs/kiem_tra_11_truy_van.sql để chạy 11 truy vấn và xuất kết quả đối chiếu. Cả hai file SQL cần được đưa vào repository cùng dữ liệu kiểm thử đã lưu.
+
+### Các lỗi thường gặp
+
+| Hiện tượng | Cách xử lý |
+| --- | --- |
+| Access denied hoặc lỗi 1045 | Kiểm tra DB_USER và DB_PASSWORD trong .env; dùng mật khẩu MySQL của chính máy. |
+| Unknown database hoặc lỗi 1049 | Nạp dump, Refresh Schemas và đối chiếu DB_NAME; dump mới tạo project1. |
+| Không kết nối được hoặc lỗi 2003 | Kiểm tra MySQL Server đang chạy, DB_HOST và DB_PORT. |
+| Không tìm thấy Python hoặc thiếu thư viện | Cài Python; chạy CAI_DAT_MOI_TRUONG.bat hoặc các lệnh trong phần Cấu hình và khởi động website. |
+| Không đăng nhập được website | Dùng tài khoản mẫu trong users, không dùng mật khẩu root MySQL làm tài khoản web. |
+| Bị chặn xem hoặc tạo profile | Kiểm tra gói ACTIVE, ngày hiệu lực và max_profiles. |
+| Cổng 5000 đang được dùng | Mở URL của bản đang chạy hoặc dừng phiên chạy cũ rồi khởi động lại. |
+
+### Xử lý lỗi DEFINER khi import
+
+Dump có DEFINER=`root`@`localhost` cho view và trigger. Nếu gặp lỗi 1227 khi import bằng tài khoản khác, hoặc lỗi 1449 vì tài khoản DEFINER không tồn tại, dùng tài khoản quản trị được phép tạo các đối tượng đó hoặc nhờ quản trị viên chuẩn bị bản dump phù hợp. Trên bản sao của file SQL, có thể bỏ riêng thuộc tính DEFINER=`root`@`localhost` để người import trở thành definer mặc định; giữ nguyên phần CREATE, nội dung view/trigger và SQL SECURITY. Không xóa toàn bộ dòng có DEFINER vì dòng đó có thể chứa cả định nghĩa đối tượng. Tài khoản import vẫn phải có quyền tạo bảng, view và trigger. Sau khi nạp, kiểm tra lại đủ ba view, hai trigger và chạy validation.
+
+Tham khảo MySQL 8.0 Stored Object Access Control: https://dev.mysql.com/doc/refman/8.0/en/stored-objects-security.html
+
+### Giới hạn và tài liệu tham khảo
+
+Ứng dụng minh họa dùng mật khẩu dạng văn bản theo dataset, không có phát video thật, thanh toán thật hay vai trò quản trị. Không coi đây là cấu hình sản phẩm công khai. Khi phát triển tiếp cần lưu mật khẩu bằng hash, tài khoản database phù hợp, máy chủ triển khai chuyên dụng và kiểm tra quyền cùng thao tác đồng thời.
+
+Tài liệu chính thức: Flask Installation — https://flask.palletsprojects.com/en/stable/installation/ ; MySQL Workbench Data Export and Import — https://dev.mysql.com/doc/workbench/en/wb-admin-export-import-management.html ; Connector/Python Multiple Statements — https://dev.mysql.com/doc/connector-python/en/connector-python-multi.html
